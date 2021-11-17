@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ClientApiController;
+use App\Http\Controllers\Api\KycApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,4 +28,8 @@ Route::group(['middleware'=>'auth:sanctum'],function() {
     Route::post('logout', [ClientApiController::class, 'logout']);
     Route::post('upload-profile', [ClientApiController::class, 'profileUpload']);
     Route::post('client-info', [ClientApiController::class, 'clientInformation']);
+
+//kyc
+    Route::post('kyc-type', [KycApiController::class, 'kycType']);
+    Route::post('countries', [KycApiController::class, 'countries']);
 });

@@ -312,7 +312,7 @@ class ClientApiController extends Controller
 
 
                 $imageEncode = File::get($request->image);
-                $client->image = "/storage/client_image/" . $imageNames;
+                $client->image = "storage/client_image/" . $imageNames;
                 $client->save();
                 Storage::disk('local')->put('public/client_image/' . $imageNames, $imageEncode);
 
@@ -321,7 +321,7 @@ class ClientApiController extends Controller
             return response()->json([
                 'status' => true,
                 'msg' => 'Success',
-                'image_link' => env('MY_DOMAIN_NAME').$client->image
+                'image_link' => env('DOMAIN_NAME').$client->image
             ]);
         }catch (\Exception $e){
             return response()->json([

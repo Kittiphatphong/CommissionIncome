@@ -226,6 +226,13 @@
                             </a>
                         </li>
 
+                        <li class="menu-item  @isset($list_countries) menu-item-here @endisset" aria-haspopup="true">
+                            <a href="{{route('countries.index')}}" class="menu-link">
+                                <i class="menu-icon fas fa-globe-asia"></i>
+                                <span class="menu-text">@lang('Countries')</span>
+                            </a>
+                        </li>
+
 
 
 {{--                        <li class="menu-section">--}}

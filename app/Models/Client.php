@@ -16,6 +16,10 @@ class Client extends Model
         return $this->belongsTo(ClientStatus::class,'status_id');
     }
 
+    public function kyc_clients(){
+        return $this->hasMany(KycClient::class,'client_id');
+    }
+
     public function otps(){
         return $this->hasOne(OTP::class);
     }
