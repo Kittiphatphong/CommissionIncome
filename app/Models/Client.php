@@ -39,5 +39,27 @@ class Client extends Model
         $otp->save();
     }
 
+    public function clientProgress(){
+        $email_score=1;
+        $info_score=0;
+        $profile_score=0;
+        $otp_score=0;
+        $verify_score = 0;
+         if($this->firstname != null){
+             $info_score=1;
+         }
+        if($this->image != null){
+            $profile_score=1;
+        }if ($this->otps->status == 1 || $this->otps->status == 3){
+            $otp_score=3;
+        }if ($this->status_id == 4){
+            $verify_score = 4;
+        }
+        $score = $email_score+$profile_score+$otp_score+$info_score+$verify_score;
+        $percent = ($score*100)/10;
+        return $percent;
+
+    }
+
 
 }

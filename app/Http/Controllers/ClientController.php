@@ -46,9 +46,16 @@ class ClientController extends Controller
      * @param  \App\Models\Client  $client
      * @return \Illuminate\Http\Response
      */
-    public function show(Client $client)
+    public function show($id)
     {
-        //
+        $client = Client::find($id);
+        if ($client->client_statuses->id == 1 && $client->firstname != null){
+            $client->status_id = 2;
+            $client->save();
+        }
+        return view('client.clientDetail')
+            ->with('list_clients','list_clients')
+            ->with('client',Client::find($id));
     }
 
     /**

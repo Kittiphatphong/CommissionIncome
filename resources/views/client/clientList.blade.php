@@ -8,8 +8,8 @@
         <!--end::Page Title-->
         <!--begin::Actions-->
         <div class="subheader-separator subheader-separator-ver mt-2 mb-2 mr-4 bg-gray-200"></div>
-        <span class="text-muted font-weight-bold mr-4">#XRS-45670</span>
-        <a href="#" class="btn btn-light-warning font-weight-bolder btn-sm">Add New</a>
+        <a href="{{route('clients.index')}}" class="text-muted font-weight-bold mr-4">List</a>
+{{--        <a href="#" class="btn btn-light-warning font-weight-bolder btn-sm">Add New</a>--}}
         <!--end::Actions-->
     </div>
     <!--end::Info-->
@@ -136,11 +136,11 @@
                                     <span class="btn  font-weight-bolder btn-sm
                                     @if($item->client_statuses->id == 1)
                                     btn-secondary
-                                    @elseif($item->client_statues->id ==2)
+                                    @elseif($item->client_statuses->id ==2)
                                     btn-light-warning
-                                    @elseif($item->client_statues->id ==3)
+                                    @elseif($item->client_statuses->id ==3)
                                     btn-light-danger
-                                    @elseif($item->client_statues->id ==4)
+                                    @elseif($item->client_statuses->id ==4)
                                     btn-light-success
                                     @endif
                                     ">
@@ -183,11 +183,13 @@
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-start m-0">
+                                        <a href="{{route('clients.show',$item->id)}}" class="btn btn-link" ><i class="fas fa-book text-primary"></i></a>
+
 
                                         <form action="{{route('clients.destroy',$item->id)}}" method="post" class="{{$item->id}}">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class=" btn btn-link delete_button" data-id="{{$item->id}}"><i class="fas fa-trash"></i></button>
+                                            <button type="submit" class=" btn btn-link delete_button" data-id="{{$item->id}}"><i class="fas fa-trash text-danger"></i></button>
                                         </form>
 
                                     </div>

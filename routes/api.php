@@ -32,4 +32,5 @@ Route::group(['middleware'=>'auth:sanctum'],function() {
 //kyc
     Route::post('kyc-type', [KycApiController::class, 'kycType']);
     Route::post('countries', [KycApiController::class, 'countries']);
+    Route::post('kyc-client', [KycApiController::class, 'kycClient']);
 });
