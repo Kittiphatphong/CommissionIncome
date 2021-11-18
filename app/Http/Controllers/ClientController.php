@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\KycClient;
 use Illuminate\Http\Request;
 class ClientController extends Controller
 {
@@ -53,8 +54,11 @@ class ClientController extends Controller
             $client->status_id = 2;
             $client->save();
         }
+        $kyc_client = KycClient::where('client_id',$id)->get()->last();
+
         return view('client.clientDetail')
             ->with('list_clients','list_clients')
+            ->with('kyc',$kyc_client)
             ->with('client',Client::find($id));
     }
 

@@ -18,6 +18,6 @@ class KycClient extends Model
     }
 
     public function kyc_types(){
-        return $this->belongsTo(KycClient::class,'type_id');
+        return $this->belongsTo(KycType::class,'type_id');
     }
 }
