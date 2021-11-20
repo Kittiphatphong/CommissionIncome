@@ -223,6 +223,12 @@
                                                         <span class="menu-text">@lang('Order Deposits')</span> @if(\App\Models\Order::whereNull('status')->count()>0)<span class="badge badge-success float-right">{{\App\Models\Order::whereNull('status')->count()}}</span>@endif
                                                     </a>
                                                 </li>
+                        <li class="menu-item  @isset($list_withdrawals) menu-item-here @endisset" aria-haspopup="true">
+                            <a href="{{route('withdrawals.index')}}" class="menu-link">
+                                <i class="menu-icon fas fa-download"></i>
+                                <span class="menu-text">@lang('Withdrawals')</span> @if(\App\Models\Withdrawal::whereNull('status')->count()>0)<span class="badge badge-danger float-right">{{\App\Models\Withdrawal::whereNull('status')->count()}}</span>@endif
+                            </a>
+                        </li>
                         <li class="menu-item  @isset($list_users) menu-item-here @endisset" aria-haspopup="true">
                             <a href="{{route('users.index')}}" class="menu-link">
                                 <i class="menu-icon fas fa-user-tie"></i>

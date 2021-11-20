@@ -7,6 +7,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\WithdrawalController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -35,6 +36,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('rate{id}',[CurrencyController::class,'updateRate'])->name('rate.update');
 
     Route::resource('order',OrderController::class);
+
+    Route::resource('withdrawals',WithdrawalController::class);
 });
 
 

@@ -41,5 +41,8 @@ Route::group(['middleware'=>'auth:sanctum'],function() {
     Route::post('your-order', [OrderApiController::class, 'yourOrder']);
 //wallet
     Route::post('wallet',[OrderApiController::class,'wallet']);
+//withdrawal
+    Route::post('withdrawal',[OrderApiController::class,'withdrawal']);
+    Route::post('your-withdrawal',[OrderApiController::class,'yourWithdrawal']);
 
 });

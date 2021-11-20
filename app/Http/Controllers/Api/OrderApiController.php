@@ -9,11 +9,13 @@ use App\Models\Client;
 use App\Models\Currency;
 use App\Models\Deposit;
 use App\Models\Order;
+use App\Models\Withdrawal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\OrderResource;
 use App\Http\Resources\WalletResource;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\WithdrawalResource;
 
 class OrderApiController extends Controller
 {
@@ -74,13 +76,12 @@ class OrderApiController extends Controller
     public function withdrawal(Request $request){
         try {
             $clientId = $request->user()->currentAccessToken()->tokenable->id;
-            $client = Client::find($clientId);
+//            $client = Client::find($clientId);
             $validator=  Validator::make($request->all(), [
-                'amount' => 'required|numeric',
-                'image' => 'required|file|image|max:50000|mimes:jpeg,png,jpg',
-                'crypto_currency' => 'required',
+                'crypto_amount' => 'required|numeric',
                 'crypto_rate' => 'required',
-                'currency_id' => 'required|exists:currencies,id',
+                'crypto_currency' => 'required',
+                'currency_id' => 'exists:currencies,id'
             ]);
 
             if ($validator->fails()) {
@@ -90,6 +91,18 @@ class OrderApiController extends Controller
                 ], 422);
             }
             $currency = Currency::find($request->currency_id);
+            $amount = ($request->crypto_amount * $request->crypto_rate) * $currency->rates->last()->rate_sell;
+
+
+            $withdrawal = new Withdrawal();
+            $withdrawal->crypto_amount = $request->crypto_amount;
+            $withdrawal->crypto_rate = $request->crypto_rate;
+            $withdrawal->crypto_currency =$request->crypto_currency;
+            $withdrawal->amount = $amount;
+            $withdrawal->rate_sell = $currency->rates->last()->rate_sell;
+            $withdrawal->client_id = $clientId;
+            $withdrawal->currency_id = $request->currency_id;
+            $withdrawal->save();
 
 
 
@@ -116,6 +129,21 @@ class OrderApiController extends Controller
             ],422);
         }
     }
+    public function yourWithdrawal(Request $request){
+        try {
+            $clientId = $request->user()->currentAccessToken()->tokenable->id;
+            return response()->json([
+                "status" => true,
+                "data" => WithdrawalResource::collection(Withdrawal::where('client_id',$clientId)->latest()->get())
+            ]);
+        }catch (\Exception $e){
+            return response()->json([
+                'status' => false,
+                'msg' => $e->getMessage()
+            ],422);
+        }
+    }
+
     public function wallet(Request $request){
         try {
             $clientId = $request->user()->currentAccessToken()->tokenable->id;
@@ -123,9 +151,16 @@ class OrderApiController extends Controller
                 ->select('crypto_currency',DB::raw('SUM(crypto_amount) as sum_crypto'))
                 ->where('client_id',$clientId)
                 ->groupBy('crypto_currency')->get();
+            $withdrawal = DB::table('withdrawals')
+                ->select('crypto_currency',DB::raw('SUM(crypto_amount) as sum_crypto'))
+                ->where('client_id',$clientId)
+                ->groupBy('crypto_currency')->get();
+
+
+
             return response()->json([
                 "status" => true,
-                "data" => $deposit
+                "data" => $withdrawal->sum_cryptol
             ]);
         }catch (\Exception $e){
             return response()->json([
