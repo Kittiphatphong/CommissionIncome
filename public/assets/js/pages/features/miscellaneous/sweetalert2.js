@@ -153,6 +153,58 @@ var KTSweetAlert2Demo = function () {
                 });
             });
         });
+        $(document).ready( function() {
+            $('.confirm_button_approve').on('click',function(e){
+                e.preventDefault();
+                var id = $(this).data('id');
+                console.log(id);
+                Swal.fire({
+                    title: 'Are you sure to approve?',
+                    // text: "You won't be able to revert this!",
+                    // timer: 10000,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Confirm',
+                    confirmButtonColor: '#3699FF',
+                    cancelButtonText: 'No, cancel!',
+                    cancelButtonColor: '#f64e60',
+                    backdrop: `rgba(0,0,0,0.6)
+                               url("https://lh3.googleusercontent.com/proxy/LESTgMOpyCOcM-Fkd6YgzKYz1aMX-AygTUpLeNwQK-lpoZ9AdrlQ0WK0NjLywCj44xKi2Ky0QMFgC0dm_HlvmfikEWnAq44")
+                               right bottom
+                               no-repeat`
+                }).then(function (result) {
+                    if (result.value) {
+                        $('.approve'+id).submit();
+                    }
+                });
+            });
+        });
+        $(document).ready( function() {
+            $('.confirm_button_reject').on('click',function(e){
+                e.preventDefault();
+                var id = $(this).data('id');
+                console.log(id);
+                Swal.fire({
+                    title: 'Are you sure to reject?',
+                    // text: "You won't be able to revert this!",
+                    // timer: 10000,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Confirm',
+                    confirmButtonColor: '#3699FF',
+                    cancelButtonText: 'No, cancel!',
+                    cancelButtonColor: '#f64e60',
+                    backdrop: `rgba(0,0,0,0.6)
+                               url("https://lh3.googleusercontent.com/proxy/LESTgMOpyCOcM-Fkd6YgzKYz1aMX-AygTUpLeNwQK-lpoZ9AdrlQ0WK0NjLywCj44xKi2Ky0QMFgC0dm_HlvmfikEWnAq44")
+                               right bottom
+                               no-repeat`
+                }).then(function (result) {
+                    if (result.value) {
+                        $('.reject'+id).submit();
+                    }
+                });
+            });
+        });
 
         $(document).ready( function() {
             $('.delete_form').on('click',function(e){

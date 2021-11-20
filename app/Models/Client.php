@@ -24,6 +24,14 @@ class Client extends Model
         return $this->hasOne(OTP::class);
     }
 
+    public function orders(){
+        return $this->hasMany(Order::class,'client_id');
+    }
+
+    public function deposits(){
+        return $this->hasMany(Deposit::class,'client_id');
+    }
+
     public function requestNewOTP(){
         $otp = new OTP();
         $otp->client_id = $this->id;
@@ -37,6 +45,9 @@ class Client extends Model
         $otp->limit_request=$otp->limit_request+1;
 
         $otp->save();
+    }
+    public function sumCrypto(){
+        $amount = 0;
     }
 
     public function clientProgress(){

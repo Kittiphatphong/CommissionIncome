@@ -211,7 +211,18 @@
                                 <span class="menu-text">@lang('Dashboard')</span>
                             </a>
                         </li>
-
+                        <li class="menu-item  @isset($list_clients) menu-item-here @endisset" aria-haspopup="true">
+                            <a href="{{route('clients.index')}}" class="menu-link">
+                                <i class="menu-icon fas fa-users"></i>
+                                <span class="menu-text">@lang('Clients')</span>
+                            </a>
+                        </li>
+                               <li class="menu-item  @isset($list_orders) menu-item-here @endisset" aria-haspopup="true">
+                                                    <a href="{{route('order.index')}}" class="menu-link">
+                                                        <i class="menu-icon fas fa-upload"></i>
+                                                        <span class="menu-text">@lang('Order Deposits')</span> @if(\App\Models\Order::whereNull('status')->count()>0)<span class="badge badge-success float-right">{{\App\Models\Order::whereNull('status')->count()}}</span>@endif
+                                                    </a>
+                                                </li>
                         <li class="menu-item  @isset($list_users) menu-item-here @endisset" aria-haspopup="true">
                             <a href="{{route('users.index')}}" class="menu-link">
                                 <i class="menu-icon fas fa-user-tie"></i>
@@ -219,10 +230,11 @@
                             </a>
                         </li>
 
-                        <li class="menu-item  @isset($list_clients) menu-item-here @endisset" aria-haspopup="true">
-                            <a href="{{route('clients.index')}}" class="menu-link">
-                                <i class="menu-icon fas fa-user-alt"></i>
-                                <span class="menu-text">@lang('Clients')</span>
+
+                        <li class="menu-item  @isset($list_currencies) menu-item-here @endisset" aria-haspopup="true">
+                            <a href="{{route('currencies.index')}}" class="menu-link">
+                                <i class="menu-icon fas fa-money-bill-alt"></i>
+                                <span class="menu-text">@lang('Currencies')</span>
                             </a>
                         </li>
 
@@ -431,7 +443,7 @@
                     <!--begin::Copyright-->
                     <div class="text-dark order-2 order-md-1">
                         <span class="text-muted font-weight-bold mr-2">2021©</span>
-                        <a href="http://keenthemes.com/metronic" target="_blank" class="text-dark-75 text-hover-primary">Planet</a>
+                        <a href="http://keenthemes.com/metronic" target="_blank" class="text-dark-75 text-hover-primary">COMMISSION INCOME</a>
                     </div>
                     <!--end::Copyright-->
                     <!--begin::Nav-->

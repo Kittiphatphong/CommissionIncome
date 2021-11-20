@@ -5,6 +5,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\OrderController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,7 +31,10 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::resource('countries',CountryController::class);
 
+    Route::resource('currencies',CurrencyController::class);
+    Route::post('rate{id}',[CurrencyController::class,'updateRate'])->name('rate.update');
 
+    Route::resource('order',OrderController::class);
 });
 
 

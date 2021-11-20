@@ -69,10 +69,35 @@
 
 
                                 </div>
-                                <div class="my-lg-0 my-3">
-                                    <a href="#" class="btn  btn-light-success font-weight-bolder text-uppercase mr-3">@lang('Approve')</a>
-                                    <a href="#" class="btn  btn-light-danger font-weight-bolder text-uppercase">@lang('Reject')</a>
+                                <div class="my-lg-0 my-3 ">
+                                    @if($client->kyc_clients->whereNull('status')->count()>0)
+                                    <button type="button" class="btn  btn-light-success font-weight-bolder text-uppercase" data-toggle="modal" data-target="#exampleModalCenter1">
+                                        @lang('Approve')
+                                    </button>
+                                        <button type="button" class="btn  btn-light-danger font-weight-bolder text-uppercase" data-toggle="modal" data-target="#exampleModalCenter">
+                                            @lang('Reject')
+                                        </button>
+                                     @endif
+
+                                        @if($client->kyc_clients->where('status',1)->count()==0 && $client->kyc_clients->count()> 0)
+                                            @if($kyc_last->status === 0)
+
+                                                <button type="button" class="btn  btn-light-danger font-weight-bolder text-uppercase" >
+                                                    Rejected By <span>{{$kyc_last->users->name}}</span>
+                                                </button>
+
+                                        @endif
+                                        @endif
+                                                @if($client->kyc_clients->where('status',1)->count()>0 && $client->kyc_clients->count()> 0)
+                                                    @if($kyc_last->status === 1)
+                                                <button type="button" class="btn  btn-light-success font-weight-bolder text-uppercase" >
+                                                    Approved By <span>{{$kyc_last->users->name}}</span>
+                                                </button>
+                                                    @endif
+                                   @endif
+
                                 </div>
+
                             </div>
                             <!--end::Title-->
                             <!--begin::Content-->
@@ -240,10 +265,43 @@
                         <div class="card-header border-0 pt-5">
                             <h3 class="card-title align-items-start flex-column">
                                 <span class="card-label font-weight-bolder text-dark">Client KYC {{$client->kyc_clients->count()}}</span>
-                                <span class="text-muted mt-3 font-weight-bold font-size-sm">More than 400+ new members</span>
+                                @if($client->kyc_clients->count()>0)
+
+                                    @if($kyc->status === null)
+                                        <span class="bg-light-primary p-2 rounded text-primary mt-3 font-weight-bold font-size-sm">Pending</span>
+                                    @elseif($kyc->status === 0)
+                                        <span class="bg-light-primary p-2 rounded text-danger mt-3 font-weight-bold font-size-sm">Rejected by {{$kyc->users->name}}</span>
+                                    @elseif($kyc->status === 1)
+                                        <span class="bg-light-primary p-2 rounded text-success mt-3 font-weight-bold font-size-sm">Approved by {{$kyc->users->name}}</span>
+                                    @endif
+                                @endif
+
                             </h3>
                             <div class="card-toolbar">
-                      ll
+                                @if($client->kyc_clients->count()>0)
+                                    <div class="border">
+                                {{$kyc->comment}}
+                                    </div>
+                                @if($kyc->status === null)
+                                    <div class="symbol symbol-50 symbol-light mr-5">
+														<span class="symbol-label">
+															<img src="assets/media/svg/misc/015-telegram.svg" class="h-50 align-self-center" alt="" />
+														</span>
+                                    </div>
+                                @elseif($kyc->status === 0)
+                                    <div class="symbol symbol-50 symbol-light mr-5">
+														<span class="symbol-label">
+															<img src="assets/media/svg/misc/012-foursquare.svg" class="h-50 align-self-center" alt="" />
+														</span>
+                                    </div>
+                                @elseif($kyc->status === 1)
+                                    <div class="symbol symbol-50 symbol-light mr-5">
+														<span class="symbol-label">
+															<img src="assets/media/svg/misc/014-kickstarter.svg" class="h-50 align-self-center" alt="" />
+														</span>
+                                    </div>
+                                @endif
+                                    @endif
                             </div>
                         </div>
                         <!--end::Header-->
@@ -310,7 +368,7 @@
                 </div>
                 <div class="col-lg-4">
                     <!--begin::Mixed Widget 14-->
-                    <div class="card card-custom card-stretch gutter-b">
+                    <div class="card card-custom card-stretch gutter-b overflow-auto" style="height: 500px">
                         <!--begin::Header-->
                         <div class="card-header border-0 pt-5">
                             <h3 class="card-title font-weight-bolder">KYC LIST</h3>
@@ -323,29 +381,48 @@
                         <!--end::Header-->
                         <!--begin::Body-->
                         <div class="card-body d-flex flex-column">
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-hover table-checkable" id="kt_datatable" style="margin-top: 13px !important">
-                                    <thead>
-                                    <tr>
 
-                                        <th>No</th>
+                                    <!--begin::Item-->
+                                    @foreach($client->kyc_clients->sortByDesc('no') as $i)
+                                    <form href="{{route('clients.show',$client->id)}}" method="get">
+                                        <!--begin::Symbol-->
+                                        <input type="hidden" name="kyc_id" value="{{$i->id}}">
+                                        <button type="submit" class="d-flex align-items-center flex-wrap mb-5 btn @if($kyc->no == $i->no) btn-primary @else btn-light-primary @endif  col-12 border">
+                                        @if($i->status === null)
+                                        <div class="symbol symbol-50 symbol-light mr-5">
+														<span class="symbol-label">
+															<img src="assets/media/svg/misc/015-telegram.svg" class="h-50 align-self-center" alt="" />
+														</span>
+                                        </div>
+                                        @elseif($i->status === 0)
+                                            <div class="symbol symbol-50 symbol-light mr-5">
+														<span class="symbol-label">
+															<img src="assets/media/svg/misc/012-foursquare.svg" class="h-50 align-self-center" alt="" />
+														</span>
+                                            </div>
+                                        @elseif($i->status === 1)
+                                            <div class="symbol symbol-50 symbol-light mr-5">
+														<span class="symbol-label">
+															<img src="assets/media/svg/misc/014-kickstarter.svg" class="h-50 align-self-center" alt="" />
+														</span>
+                                            </div>
+                                        @endif
+                                        <!--end::Symbol-->
+                                        <!--begin::Text-->
+                                        <div class="d-flex flex-column flex-grow-1 mr-2">
+                                            <span class="font-weight-bold text-dark-75 text-hover-primary font-size-lg mb-1">{{$i->kyc_types->name}}</span>
+                                            <span class="text-muted font-weight-bold">{{$i->created_at}}</span>
+                                        </div>
+                                        <!--end::Text-->
+                                        <span class="label label-xl label-light label-inline my-lg-0 my-2 text-dark-50 font-weight-bolder">{{$i->no}}</span>
+                                    </button>
+                                    </form>
 
 
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    @foreach($client->kyc_clients as $item)
-                                        <tr>
-
-                                            <td>{{$item->no}}</td>
-
-
-
-                                        </tr>
                                     @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+
+                                <!--end::Body-->
+
                         </div>
                         <!--end::Body-->
                     </div>
@@ -359,4 +436,62 @@
     </div>
 
 
+
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Review KYC</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{route('clients.update',$client->id)}}" method="post">
+                    @csrf
+                    @method('PATCH')
+                <div class="modal-body">
+                 <div class="form-group">
+                     <label>Comment</label>
+                     <textarea name="comment" class="form-control" rows="5" required></textarea>
+                 </div>
+                    <input type="hidden" name="action" value="reject">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn  btn-light-danger font-weight-bolder text-uppercase ">@lang('Reject')</button>
+
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModalCenter1" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Review KYC</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{route('clients.update',$client->id)}}" method="post">
+                    @csrf
+                    @method('PATCH')
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Comment</label>
+                            <textarea name="comment" class="form-control" rows="5" required></textarea>
+                        </div>
+                        <input type="hidden" name="action" value="approve">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn  btn-light-success font-weight-bolder text-uppercase ">@lang('Approve')</button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 @endsection

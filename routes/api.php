@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ClientApiController;
 use App\Http\Controllers\Api\KycApiController;
+use App\Http\Controllers\Api\OrderApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,4 +34,12 @@ Route::group(['middleware'=>'auth:sanctum'],function() {
     Route::post('kyc-type', [KycApiController::class, 'kycType']);
     Route::post('countries', [KycApiController::class, 'countries']);
     Route::post('kyc-client', [KycApiController::class, 'kycClient']);
+
+//order
+    Route::post('currency', [OrderApiController::class, 'currency']);
+    Route::post('order', [OrderApiController::class, 'order']);
+    Route::post('your-order', [OrderApiController::class, 'yourOrder']);
+//wallet
+    Route::post('wallet',[OrderApiController::class,'wallet']);
+
 });

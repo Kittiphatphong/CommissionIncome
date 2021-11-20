@@ -60,6 +60,24 @@ class KycApiController extends Controller
                     "msg" => $validator->errors()->first(),
                 ], 422);
             }
+
+
+            if ($client->kyc_clients->whereNull('status')->count() > 0 ){
+                return response()->json([
+                    "status" => false,
+                    "msg" => 'This User Is Pending Verify',
+                ], 422);
+            }
+
+            if ( $client->kyc_clients->where('status',1)->count() > 0){
+                return response()->json([
+                    "status" => false,
+                    "msg" => 'This User Is Verified',
+                ], 422);
+            }
+
+            $client->status_id = 2;
+            $client->save();
             $kyc_client= new KycClient();
             $kyc_client->number = $request->number;
             $kyc_client->type_id = $request->type_id;
