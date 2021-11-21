@@ -147,22 +147,13 @@ class OrderApiController extends Controller
     public function wallet(Request $request){
         try {
             $clientId = $request->user()->currentAccessToken()->tokenable->id;
-            $deposit = DB::table('deposits')
-                ->select('crypto_currency',DB::raw('SUM(crypto_amount) as sum_crypto'))
-                ->where('client_id',$clientId)
-                ->groupBy('crypto_currency')->get();
-            $withdrawal = DB::table('withdrawals')
-                ->select('crypto_currency',DB::raw('SUM(crypto_amount) as sum_crypto'))
-                ->where('client_id',$clientId)
-                ->groupBy('crypto_currency')->get();
-
 
 
 
 
             return response()->json([
                 "status" => true,
-                "data" => $this
+                "data" => Client::find($clientId)->wallet()
             ]);
         }catch (\Exception $e){
             return response()->json([

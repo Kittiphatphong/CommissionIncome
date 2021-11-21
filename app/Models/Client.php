@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 
@@ -69,6 +70,39 @@ class Client extends Model
         $score = $email_score+$profile_score+$otp_score+$info_score+$verify_score;
         $percent = ($score*100)/10;
         return $percent;
+
+    }
+
+    public function wallet(){
+        $deposit = DB::table('deposits')
+            ->select('crypto_currency',DB::raw('SUM(crypto_amount) as crypto_amount'))
+            ->where('client_id',$this->id)
+            ->groupBy('crypto_currency')->get();
+
+        $withdrawals = DB::table('withdrawals')
+            ->select('crypto_currency',DB::raw('SUM(crypto_amount) as crypto_amount'))
+            ->where('client_id',$this->id)
+            ->whereNull('status')
+            ->orWhere('status',1)
+            ->groupBy('crypto_currency')->get();
+
+        $wallet = [];
+        foreach ($deposit as $item){
+
+         $withdrawal = $withdrawals->where('crypto_currency',$item->crypto_currency);
+         if ($withdrawal->count()==0){
+             $amount = $item->crypto_amount;
+
+         }else{
+             $amount = $item->crypto_amount - $withdrawal->first()->crypto_amount;
+
+         }
+
+        array_push($wallet,["crypto" => $item->crypto_currency,"amount" => $amount]);
+        }
+
+        return $wallet;
+
 
     }
 
