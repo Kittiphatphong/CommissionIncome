@@ -118,7 +118,7 @@ class ClientApiController extends Controller
     }
     public function setPassword(Request $request){
         try {
-            if ($request->device_token) {
+
                 $validator= Validator::make($request->all(),[
                     'email' => 'exists:clients,email',
                     'password' => 'required|min:8|same:password_confirm',
@@ -128,12 +128,6 @@ class ClientApiController extends Controller
                     'gender' => 'required',
                     'birthday' => 'required|date',
                 ]);
-            }else{
-                $validator= Validator::make($request->all(),[
-                    'email' => 'exists:clients,email',
-                    'password' => 'required|min:8|same:password_confirm'
-                ]);
-            }
 
             if ($validator->fails()) {
                 return response()->json([
@@ -152,18 +146,14 @@ class ClientApiController extends Controller
             }
             $client->tokens()->delete();
             $client->password = Hash::make($request->password);
-            if ($request->device_token){
                 $client->device_token = $request->device_token;
                 $client->firstname = $request->firstname;
                 $client->lastname = $request->lastname;
                 $client->gender = $request->gender;
                 $client->birthday = $request->birthday;
-            }
 
             $client->save();
-
 //             $this->clientRegister($request->device_token,$request->phone,$request->firstname." ".$request->lastname,$request->gender,$request->birthday);
-
             $otp->status = 1;
             $otp->save();
 
@@ -177,8 +167,61 @@ class ClientApiController extends Controller
             ],422);
         }
 
+    }
+
+    public function setForgotPassword(Request $request){
+        try {
+
+            $validator= Validator::make($request->all(),[
+                'email' => 'exists:clients,email',
+                'password' => 'required|min:8|same:password_confirm',
+                'device_token' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    "status" => false,
+                    "msg" => $validator->errors()->first(),
+                ], 422);
+            }
+
+            $client = Client::where('email',$request->email)->first();
+            $otp = OTP::where('client_id','=',$client->id)->first();
+            if($client->otps->status == 0){
+                return response()->json(['status' => false ,'msg' => 'This email is not verify'],422);
+            }
+            if($client->otps->status == 1){
+                return response()->json(['status' => false ,'msg' => 'This email is success'],422);
+            }
+            if($client->otps->status == 2){
+                return response()->json(['status' => false ,'msg' => 'This email is success'],422);
+            }
+            $client->tokens()->delete();
+            $client->password = Hash::make($request->password);
+            $client->device_token = $request->device_token;
+
+            $client->save();
+//             $this->clientRegister($request->device_token,$request->phone,$request->firstname." ".$request->lastname,$request->gender,$request->birthday);
+            $otp->status = 1;
+            $otp->save();
+
+
+            $content = 'You have new password successful with ip address'. request()->ip().
+                ' with Device name '. $request->header('User-Agent');
+            Mail::to($client->email)->send(new Format1Mail('Client Forgot Password','Your account have set a new password', $content));
+
+            $token = $client->createToken($request->device_token)->plainTextToken;
+            return response()->json(['status' => true ,'data' => ['client'=>Client::find($client->id),'token'=>$token]]);
+
+        }catch (\Exception $e){
+            return response()->json([
+                'status' => false,
+                'msg' => $e->getMessage()
+            ],422);
+        }
 
     }
+
     public function requestOTP(Request $request){
 
         try {

@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\OrderApiController;
 Route::post('register-email',[ClientApiController::class,'registerEmail']);
 Route::post('verify-otp',[ClientApiController::class,'verifyOTP']);
 Route::post('set-password',[ClientApiController::class,'setPassword']);
+Route::post('set-forgot-password',[ClientApiController::class,'setForgotPassword']);
 Route::post('request-otp',[ClientApiController::class,'requestOTP']);
 Route::post('login',[ClientApiController::class,'login']);
 

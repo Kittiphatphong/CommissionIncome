@@ -165,92 +165,24 @@
                     <!--end::Details-->
                     <div class="separator separator-solid"></div>
                     <!--begin::Items-->
-                    <div class="d-flex align-items-center flex-wrap mt-8">
+                    <div class="d-flex align-items-start flex-wrap mt-8">
+                    @foreach($client->wallet() as $wallet)
                         <!--begin::Item-->
                         <div class="d-flex align-items-center flex-lg-fill mr-5 mb-2">
 												<span class="mr-4">
 													<i class="flaticon-piggy-bank display-4 text-muted font-weight-bold"></i>
 												</span>
                             <div class="d-flex flex-column text-dark-75">
-                                <span class="font-weight-bolder font-size-sm">Earnings</span>
+                                <span class="font-weight-bolder font-size-sm">{{$wallet['crypto']}}</span>
                                 <span class="font-weight-bolder font-size-h5">
-													<span class="text-dark-50 font-weight-bold">$</span>249,500</span>
+													<span class="text-dark-50 font-weight-bold"></span>{{$wallet['amount']}}</span>
                             </div>
                         </div>
                         <!--end::Item-->
-                        <!--begin::Item-->
-                        <div class="d-flex align-items-center flex-lg-fill mr-5 mb-2">
-												<span class="mr-4">
-													<i class="flaticon-confetti display-4 text-muted font-weight-bold"></i>
-												</span>
-                            <div class="d-flex flex-column text-dark-75">
-                                <span class="font-weight-bolder font-size-sm">Expenses</span>
-                                <span class="font-weight-bolder font-size-h5">
-													<span class="text-dark-50 font-weight-bold">$</span>164,700</span>
-                            </div>
-                        </div>
-                        <!--end::Item-->
-                        <!--begin::Item-->
-                        <div class="d-flex align-items-center flex-lg-fill mr-5 mb-2">
-												<span class="mr-4">
-													<i class="flaticon-pie-chart display-4 text-muted font-weight-bold"></i>
-												</span>
-                            <div class="d-flex flex-column text-dark-75">
-                                <span class="font-weight-bolder font-size-sm">Net</span>
-                                <span class="font-weight-bolder font-size-h5">
-													<span class="text-dark-50 font-weight-bold">$</span>782,300</span>
-                            </div>
-                        </div>
-                        <!--end::Item-->
-                        <!--begin::Item-->
-                        <div class="d-flex align-items-center flex-lg-fill mr-5 mb-2">
-												<span class="mr-4">
-													<i class="flaticon-file-2 display-4 text-muted font-weight-bold"></i>
-												</span>
-                            <div class="d-flex flex-column flex-lg-fill">
-                                <span class="text-dark-75 font-weight-bolder font-size-sm">73 Tasks</span>
-                                <a href="#" class="text-primary font-weight-bolder">View</a>
-                            </div>
-                        </div>
-                        <!--end::Item-->
-                        <!--begin::Item-->
-                        <div class="d-flex align-items-center flex-lg-fill mr-5 mb-2">
-												<span class="mr-4">
-													<i class="flaticon-chat-1 display-4 text-muted font-weight-bold"></i>
-												</span>
-                            <div class="d-flex flex-column">
-                                <span class="text-dark-75 font-weight-bolder font-size-sm">648 Comments</span>
-                                <a href="#" class="text-primary font-weight-bolder">View</a>
-                            </div>
-                        </div>
-                        <!--end::Item-->
-                        <!--begin::Item-->
-                        <div class="d-flex align-items-center flex-lg-fill mb-2 float-left">
-												<span class="mr-4">
-													<i class="flaticon-network display-4 text-muted font-weight-bold"></i>
-												</span>
-                            <div class="symbol-group symbol-hover">
-                                <div class="symbol symbol-30 symbol-circle" data-toggle="tooltip" title="Mark Stone">
-                                    <img alt="Pic" src="assets/media/users/300_25.jpg" />
-                                </div>
-                                <div class="symbol symbol-30 symbol-circle" data-toggle="tooltip" title="Charlie Stone">
-                                    <img alt="Pic" src="assets/media/users/300_19.jpg" />
-                                </div>
-                                <div class="symbol symbol-30 symbol-circle" data-toggle="tooltip" title="Luca Doncic">
-                                    <img alt="Pic" src="assets/media/users/300_22.jpg" />
-                                </div>
-                                <div class="symbol symbol-30 symbol-circle" data-toggle="tooltip" title="Nick Mana">
-                                    <img alt="Pic" src="assets/media/users/300_23.jpg" />
-                                </div>
-                                <div class="symbol symbol-30 symbol-circle" data-toggle="tooltip" title="Teresa Fox">
-                                    <img alt="Pic" src="assets/media/users/300_18.jpg" />
-                                </div>
-                                <div class="symbol symbol-30 symbol-circle symbol-light">
-                                    <span class="symbol-label font-weight-bold">5+</span>
-                                </div>
-                            </div>
-                        </div>
-                        <!--end::Item-->
+                    @endforeach
+
+
+
                     </div>
                     <!--begin::Items-->
                 </div>

@@ -98,12 +98,37 @@ class Client extends Model
 
          }
 
-        array_push($wallet,["crypto" => $item->crypto_currency,"amount" => $amount]);
+        array_push($wallet,["crypto" => $item->crypto_currency,"amount" => round($amount,10,PHP_ROUND_HALF_DOWN)  ]);
         }
 
         return $wallet;
+    }
 
 
+
+
+    public function checkWallet($crypto_currency){
+        $deposit = DB::table('deposits')
+            ->select(DB::raw('SUM(crypto_amount) as crypto_amount'))
+            ->where('client_id',$this->id)->where('crypto_currency',$crypto_currency)
+            ->groupBy('crypto_currency')->get();
+
+        $withdrawals = DB::table('withdrawals')
+            ->select(DB::raw('SUM(crypto_amount) as crypto_amount'))
+            ->where('client_id',$this->id)
+            ->whereNull('status')
+            ->orWhere('status',1)
+            ->where('crypto_currency',$crypto_currency)
+            ->groupBy('crypto_currency')->get();
+        if ($deposit->count()>0 && $withdrawals->count()>0){
+            $wallet = $deposit->first()->crypto_amount-$withdrawals->first()->crypto_amount;
+        }elseif (($deposit->count()>0 && $withdrawals->count()<=0)){
+            $wallet = $deposit->first()->crypto_amount;
+        }else{
+            $wallet = 0 ;
+        }
+
+        return  round($wallet,10,PHP_ROUND_HALF_DOWN);
     }
 
 

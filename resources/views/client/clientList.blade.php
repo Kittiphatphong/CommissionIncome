@@ -101,8 +101,7 @@
                             <th>BIRTHDAY</th>
                             <th>@lang('STATUS')</th>
                             <th>OTP STATUS</th>
-                            <th>OTP</th>
-                            <th>COMMENT</th>
+                            <th>WALLET</th>
                             <th>ACTION</th>
                             <th>UPDATED</th>
 
@@ -171,16 +170,12 @@
 
                                     @endif
                                 </td>
-
                                 <td>
-                                    {{$item->otps->otp_number}}
+                                @foreach($item->wallet() as $wallet)
+                                [<span class="bg-light-primary">{{$wallet['crypto']}}</span>:<span class="font-weight-bold text-primary">{{$wallet['amount']}}</span>]
+                                @endforeach
+                                </td>
 
-                                    [RQ:<b>{{$item->otps->limit_request}}</b>]
-                                    [IN:<b>{{$item->otps->limit_input}}</b>]
-                                </td>
-                                <td>
-                                    {{$item->comment}}
-                                </td>
                                 <td>
                                     <div class="d-flex justify-content-start m-0">
                                         <a href="{{route('clients.show',$item->id)}}" class="btn btn-link" ><i class="fas fa-book text-primary"></i></a>

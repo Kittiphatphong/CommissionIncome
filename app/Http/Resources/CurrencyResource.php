@@ -18,7 +18,7 @@ class CurrencyResource extends JsonResource
             'id' => $this->id,
             "name" => $this->name,
             "icon" => env('DOMAIN_NAME_P').$this->image,
-            "rate" => $this->rates->last()->rate
+            "rate" =>  number_format($this->rates->last()->rate,2)
         ];
     }
 }
