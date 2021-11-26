@@ -92,7 +92,12 @@ class OrderApiController extends Controller
                 'crypto_currency' => 'required',
                 'currency_id' => 'exists:currencies,id'
             ]);
-
+            if ($request->crypto_amount <=0) {
+                return response()->json([
+                    "status" => false,
+                    "msg" => 'stop',
+                ], 422);
+            }
             if ($validator->fails()) {
                 return response()->json([
                     "status" => false,
@@ -100,7 +105,9 @@ class OrderApiController extends Controller
                 ], 422);
             }
             $currency = Currency::find($request->currency_id);
-            $amount = ($request->crypto_amount * $request->crypto_rate) * $currency->rates->last()->rate_sell;
+
+                $amount = $request->crypto_amount * $request->crypto_rate * $currency->rates->last()->rate_sell;
+
 
             if($client->checkWallet($request->crypto_currency)<$request->crypto_amount){
                 return response()->json([

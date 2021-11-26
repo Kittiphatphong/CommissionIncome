@@ -25,14 +25,14 @@ class OrderResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'amount' => $this->amount,
+            'amount' => (string) $this->amount,
             'currency' => $this->currencies->name,
             'snip_image' => env('DOMAIN_NAME_P').$this->image,
             'status' => $status,
             'crypto_currency' => $this->crypto_currency,
-            'crypto_rate' => $this->crypto_rate,
+            'crypto_rate' =>(string) $this->crypto_rate,
             'date_time' => $this->created_at,
-            'your_crypto' => $this->your_crypto()
+            'your_crypto' =>(string) $this->your_crypto()
         ];
     }
 }

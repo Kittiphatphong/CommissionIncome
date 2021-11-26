@@ -79,26 +79,42 @@ class Client extends Model
             ->where('client_id',$this->id)
             ->groupBy('crypto_currency')->get();
 
-        $withdrawals = DB::table('withdrawals')
-            ->select('crypto_currency',DB::raw('SUM(crypto_amount) as crypto_amount'))
-            ->where('client_id',$this->id)
-            ->whereNull('status')
-            ->orWhere('status',1)
-            ->groupBy('crypto_currency')->get();
+
 
         $wallet = [];
         foreach ($deposit as $item){
+            $withdrawals = DB::table('withdrawals')
+                ->select(DB::raw('SUM(crypto_amount) as crypto_amount'))
+                ->where('client_id',$this->id)
+                ->where('crypto_currency',$item->crypto_currency)
+                ->WhereNull('status')
+                ->groupBy('crypto_currency')->get();
 
-         $withdrawal = $withdrawals->where('crypto_currency',$item->crypto_currency);
-         if ($withdrawal->count()==0){
-             $amount = $item->crypto_amount;
+            $withdrawals1 = DB::table('withdrawals')
+                ->select(DB::raw('SUM(crypto_amount) as crypto_amount'))
+                ->where('client_id',$this->id)
+                ->where('crypto_currency',$item->crypto_currency)
+                ->Where('status',1)
+                ->groupBy('crypto_currency')->get();
+
+
+         if ($withdrawals->count()>0 && $withdrawals1->count()>0){
+             $amount = $item->crypto_amount - $withdrawals->first()->crypto_amount - $withdrawals1->first()->crypto_amount;
+
+         }elseif($withdrawals->count()>0 && $withdrawals1->count()<=0){
+             $amount = $item->crypto_amount - $withdrawals->first()->crypto_amount ;
+
+         }elseif($withdrawals->count()<=0 && $withdrawals1->count()>0){
+             $amount = $item->crypto_amount  - $withdrawals1->first()->crypto_amount;
+
+         }elseif($withdrawals->count()<=0 && $withdrawals1->count()<=0) {
+             $amount = $item->crypto_amount ;
 
          }else{
-             $amount = $item->crypto_amount - $withdrawal->first()->crypto_amount;
-
+             $amount = 0 ;
          }
+            array_push($wallet,["crypto" => $item->crypto_currency,"amount" => round($amount,10,PHP_ROUND_HALF_DOWN)]);
 
-        array_push($wallet,["crypto" => $item->crypto_currency,"amount" => round($amount,10,PHP_ROUND_HALF_DOWN)  ]);
         }
 
         return $wallet;
@@ -116,13 +132,25 @@ class Client extends Model
         $withdrawals = DB::table('withdrawals')
             ->select(DB::raw('SUM(crypto_amount) as crypto_amount'))
             ->where('client_id',$this->id)
-            ->whereNull('status')
-            ->orWhere('status',1)
             ->where('crypto_currency',$crypto_currency)
+            ->WhereNull('status')
             ->groupBy('crypto_currency')->get();
-        if ($deposit->count()>0 && $withdrawals->count()>0){
-            $wallet = $deposit->first()->crypto_amount-$withdrawals->first()->crypto_amount;
-        }elseif (($deposit->count()>0 && $withdrawals->count()<=0)){
+
+        $withdrawals1 = DB::table('withdrawals')
+            ->select(DB::raw('SUM(crypto_amount) as crypto_amount'))
+            ->where('client_id',$this->id)
+            ->where('crypto_currency',$crypto_currency)
+            ->Where('status',1)
+            ->groupBy('crypto_currency')->get();
+
+        if ($deposit->count()>0 && $withdrawals->count()>0 && $withdrawals1->count()>0 ){
+            $wallet = $deposit->first()->crypto_amount -$withdrawals->first()->crypto_amount -$withdrawals1->first()->crypto_amount;
+        }elseif ($deposit->count()>0 && $withdrawals->count()>0 && $withdrawals1->count()<=0 ){
+            $wallet = $deposit->first()->crypto_amount -$withdrawals->first()->crypto_amount ;
+        }elseif ($deposit->count()>0 && $withdrawals->count()<=0 && $withdrawals1->count()>0 ){
+            $wallet = $deposit->first()->crypto_amount -$withdrawals1->first()->crypto_amount ;
+        }
+        elseif (($deposit->count()>0 && $withdrawals->count()<=0)){
             $wallet = $deposit->first()->crypto_amount;
         }else{
             $wallet = 0 ;

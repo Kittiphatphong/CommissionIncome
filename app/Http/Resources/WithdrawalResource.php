@@ -25,11 +25,10 @@ class WithdrawalResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'amount' => $this->amount,
-            'currency' => $this->currencies->name,
-            'crypto' => $this->crypto_amount,
+            'amount' => (string) $this->amount,
+            'crypto' => (string) $this->crypto_amount,
             'crypto_currency' => $this->crypto_currency,
-            'crypto_rate' => $this->crypto_rate,
+            'crypto_rate' => (string) $this->crypto_rate,
             'status' => $status,
             'date_time' => $this->created_at
 
