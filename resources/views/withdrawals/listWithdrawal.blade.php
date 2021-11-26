@@ -52,7 +52,6 @@
                         <th>CLIENT</th>
                         <th>AMOUNT</th>
                         <th>CRYPTO</th>
-{{--                        <th>SNIP IMAGE</th>--}}
                         <th>STATUS</th>
                         <th>UPDATED BY</th>
                         <th>CREATED AT</th>
@@ -66,10 +65,8 @@
                         <tr>
                             <td>{{$item->id}}</td>
                             <td>{{$item->clients->firstname}} {{$item->clients->lastname}}<br><span class="text-primary">{{$item->clients->email}}</span></td>
-                          `  <td>{{number_format($item->amount)}} {{$item->currencies->name}}</td>
+                            <td>{{number_format($item->amount)}} {{$item->currencies->name}}</td>
                             <td>{{$item->crypto_amount}} {{$item->crypto_currency}}</td>
-{{--                            <td>     <div class="item" style="width: 64px;"><a href="{{$item->image}}" data-lightbox="image"><img class="img-fluid" src="{{$item->image}}"></a></div>--}}
-{{--                            </td>`--}}
                             <td>
                                 @if($item->status === null)
                                     <span class="btn  font-weight-bolder btn-sm btn-secondary">
