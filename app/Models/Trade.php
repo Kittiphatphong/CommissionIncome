@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use rakeshthapac\LaraTime\Traits\LaraTimeable;
+
 class Trade extends Model
 {
-    use HasFactory,LaraTimeable;
+    use HasFactory;
 
    public function trade_types(){
        return $this->belongsTo(TradeType::class,'trade_type_id');
