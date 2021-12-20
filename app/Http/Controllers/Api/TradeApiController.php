@@ -11,6 +11,7 @@ use App\Models\TradeType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Resources\TradeResource;
 
 class TradeApiController extends Controller
 {
@@ -33,10 +34,10 @@ class TradeApiController extends Controller
         try {
             $clientId = $request->user()->currentAccessToken()->tokenable->id;
             $client = Client::find($clientId);
-            $data = Trade::where('client_id',$clientId)->get();
+            $data = Trade::where('client_id',$clientId)->where('date_time_expire','<=',Carbon::now())->latest()->get();
             return response()->json([
                 "status" => true,
-                "data" => $data
+                "data" => TradeResource::collection($data)
             ]);
         }catch (\Exception $e){
             return response()->json([
