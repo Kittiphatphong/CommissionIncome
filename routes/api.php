@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ClientApiController;
 use App\Http\Controllers\Api\KycApiController;
 use App\Http\Controllers\Api\OrderApiController;
+use App\Http\Controllers\Api\TradeApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,4 +47,9 @@ Route::group(['middleware'=>'auth:sanctum'],function() {
     Route::post('withdrawal',[OrderApiController::class,'withdrawal']);
     Route::post('your-withdrawal',[OrderApiController::class,'yourWithdrawal']);
 
+
+// Trade
+   Route::post('trade-type',[TradeApiController::class,'typeTrade']);
+   Route::post('trade',[TradeApiController::class,'trade']);
+    Route::post('trade-list',[TradeApiController::class,'tradeList']);
 });

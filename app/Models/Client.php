@@ -17,6 +17,10 @@ class Client extends Model
         return $this->belongsTo(ClientStatus::class,'status_id');
     }
 
+    public function trades(){
+        return $this->hasMany(Trade::class,'client_id');
+    }
+
     public function kyc_clients(){
         return $this->hasMany(KycClient::class,'client_id');
     }
@@ -78,9 +82,6 @@ class Client extends Model
             ->select('crypto_currency',DB::raw('SUM(crypto_amount) as crypto_amount'))
             ->where('client_id',$this->id)
             ->groupBy('crypto_currency')->get();
-
-
-
         $wallet = [];
         foreach ($deposit as $item){
             $withdrawals = DB::table('withdrawals')
@@ -97,18 +98,28 @@ class Client extends Model
                 ->Where('status',1)
                 ->groupBy('crypto_currency')->get();
 
+            $trade = DB::table('trades')
+                ->select(DB::raw('SUM(trade_result) as crypto_amount'))
+                ->where('client_id',$this->id)
+                ->where('crypto_currency',$item->crypto_currency)
+                ->groupBy('crypto_currency')->get();
+
+            $trade_amount = 0;
+            if ($trade->count()>0){
+                $trade_amount = $trade->first()->crypto_amount;
+            }
 
          if ($withdrawals->count()>0 && $withdrawals1->count()>0){
-             $amount = $item->crypto_amount - $withdrawals->first()->crypto_amount - $withdrawals1->first()->crypto_amount;
+             $amount = ($trade_amount+$item->crypto_amount) - $withdrawals->first()->crypto_amount - $withdrawals1->first()->crypto_amount;
 
          }elseif($withdrawals->count()>0 && $withdrawals1->count()<=0){
-             $amount = $item->crypto_amount - $withdrawals->first()->crypto_amount ;
+             $amount = ($trade_amount+$item->crypto_amount)  - $withdrawals->first()->crypto_amount ;
 
          }elseif($withdrawals->count()<=0 && $withdrawals1->count()>0){
-             $amount = $item->crypto_amount  - $withdrawals1->first()->crypto_amount;
+             $amount = ($trade_amount+$item->crypto_amount)   - $withdrawals1->first()->crypto_amount;
 
          }elseif($withdrawals->count()<=0 && $withdrawals1->count()<=0) {
-             $amount = $item->crypto_amount ;
+             $amount = ($trade_amount+$item->crypto_amount)  ;
 
          }else{
              $amount = 0 ;
@@ -143,15 +154,27 @@ class Client extends Model
             ->Where('status',1)
             ->groupBy('crypto_currency')->get();
 
+
+        $trade= DB::table('trades')
+            ->select(DB::raw('SUM(trade_result) as crypto_amount'))
+            ->where('client_id',$this->id)
+            ->where('crypto_currency',$crypto_currency)
+            ->groupBy('crypto_currency')->get();
+
+        $trade_amount = 0;
+        if ($trade->count()>0){
+            $trade_amount = $trade->first()->crypto_amount;
+        }
+
         if ($deposit->count()>0 && $withdrawals->count()>0 && $withdrawals1->count()>0 ){
-            $wallet = $deposit->first()->crypto_amount -$withdrawals->first()->crypto_amount -$withdrawals1->first()->crypto_amount;
+            $wallet = ($deposit->first()->crypto_amount+$trade_amount) -$withdrawals->first()->crypto_amount -$withdrawals1->first()->crypto_amount;
         }elseif ($deposit->count()>0 && $withdrawals->count()>0 && $withdrawals1->count()<=0 ){
-            $wallet = $deposit->first()->crypto_amount -$withdrawals->first()->crypto_amount ;
+            $wallet = ($deposit->first()->crypto_amount+$trade_amount)  -$withdrawals->first()->crypto_amount ;
         }elseif ($deposit->count()>0 && $withdrawals->count()<=0 && $withdrawals1->count()>0 ){
-            $wallet = $deposit->first()->crypto_amount -$withdrawals1->first()->crypto_amount ;
+            $wallet = ($deposit->first()->crypto_amount+$trade_amount)  -$withdrawals1->first()->crypto_amount ;
         }
         elseif (($deposit->count()>0 && $withdrawals->count()<=0)){
-            $wallet = $deposit->first()->crypto_amount;
+            $wallet = ($deposit->first()->crypto_amount+$trade_amount) ;
         }else{
             $wallet = 0 ;
         }

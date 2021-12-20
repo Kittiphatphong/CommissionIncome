@@ -8,6 +8,8 @@ use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\WithdrawalController;
+use App\Http\Controllers\TradeTypeController;
+use App\Http\Controllers\TradeController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -38,6 +40,10 @@ Route::group(['middleware' => 'auth'], function() {
     Route::resource('order',OrderController::class);
 
     Route::resource('withdrawals',WithdrawalController::class);
+
+    Route::resource('trade-type',TradeTypeController::class);
+
+    Route::resource('trade',TradeController::class);
 });
 
 
