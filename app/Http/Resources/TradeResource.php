@@ -15,6 +15,11 @@ class TradeResource extends JsonResource
      */
     public function toArray($request)
     {
+        if($this->date_time_expire <= Carbon::now()){
+            $status = 1;
+        }else{
+            $status = 0;
+        }
         return [
             'trade_type' => $this->trade_types->timeout,
             'trade_amount' => $this->trade_amount,
@@ -24,6 +29,7 @@ class TradeResource extends JsonResource
             'type' => $this->type,
             'time_start_trade' => Carbon::parse($this->created_at)->toDateTimeString(),
             'time_end_trade' => Carbon::parse($this->date_time_expire)->toDateTimeString(),
+            'status' => $status
 
 
         ];

@@ -34,7 +34,7 @@ class TradeApiController extends Controller
         try {
             $clientId = $request->user()->currentAccessToken()->tokenable->id;
             $client = Client::find($clientId);
-            $data = Trade::where('client_id',$clientId)->where('date_time_expire','<=',Carbon::now())->latest()->get();
+            $data = Trade::where('client_id',$clientId)->latest()->get();
             return response()->json([
                 "status" => true,
                 "data" => TradeResource::collection($data)
