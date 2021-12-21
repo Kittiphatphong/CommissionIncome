@@ -47,9 +47,10 @@
                             <th>@lang('Time Out')</th>
                             <th>@lang('Percent')</th>
                             <th>@lang('Count')</th>
+                            <th>@lang('Min')</th>
+                            <th>@lang('Max')</th>
+                            <th>@lang('Edit')</th>
                             <th>@lang('Created at')</th>
-
-
                         </tr>
                         </thead>
                         <tbody>
@@ -65,7 +66,16 @@
                                     {{$item->percent}} %
                                 </td>
                                 <td>
-                                    10
+                                    {{$item->trades->count()}}
+                                </td>
+                                <td>
+                                    {{number_format($item->min)}}
+                                </td>
+                                <td>
+                                    {{number_format($item->max)}}
+                                </td>
+                                <td>
+                                    <a href="{{route('trade-type.edit',$item->id)}}"  ><i class="fas fa-edit text-warning"></i></a>
                                 </td>
 
                                 <td>{{$item->created_at}}</td>
@@ -99,6 +109,19 @@
                             <div class="input-group-append">
                                 <span class="input-group-text">@lang('second')</span>
                             </div>
+                        </div>
+                        <div class="form-group">
+                            <label>@lang('Min')</label>
+                            <input type="text" name="min" class="form-control" id="money" >
+                        </div>
+                        <div class="form-group">
+                            <label>@lang('Max')</label>
+                            <input type="text" name="max" class="form-control" id="money" >
+                        </div>
+
+                        <div class="form-group">
+                            <label>@lang('Percent')</label>
+                            <input type="number" name="percent" class="form-control"  >
                         </div>
                     </div>
                     <div class="modal-footer">

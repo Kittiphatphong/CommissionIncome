@@ -52,9 +52,6 @@
                             <th>@lang('Type')</th>
                             <th>@lang('Action')</th>
 
-
-
-
                         </tr>
                         </thead>
                         <tbody  >

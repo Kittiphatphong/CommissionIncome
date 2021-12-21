@@ -20,7 +20,7 @@ class TradeApiController extends Controller
 
             return response()->json([
                 "status" => true,
-                "data" => TradeType::orderBy('timeout')->select('id','timeout','percent')->get()
+                "data" => TradeType::orderBy('timeout')->select('id','timeout','percent','min','max')->get()
             ]);
         }catch (\Exception $e){
             return response()->json([
@@ -56,7 +56,9 @@ class TradeApiController extends Controller
                 'trade_type_id' => 'required|exists:trade_types,id',
                 'trade_amount' => 'required|numeric',
                 'trade_crypto_currency' => 'required',
-                'type' => 'required'
+
+                'type' => 'required',
+                 'crypto_rate' => 'required',
             ]);
 
             if ($validator->fails()) {
@@ -65,6 +67,22 @@ class TradeApiController extends Controller
                     "msg" => $validator->errors()->first(),
                 ], 422);
             }
+            $trade_type = TradeType::find($request->trade_type_id);
+            if ($request->trade_amount < $trade_type->min){
+                return response()->json([
+                    "status" => false,
+                    "msg" => 'Amount minimum is '.number_format($trade_type->min). ' USDT',
+                ], 422);
+            }
+            if ($request->trade_amount > $trade_type->max){
+                return response()->json([
+                    "status" => false,
+                    "msg" => 'Amount maximum is '.number_format($trade_type->max). ' USDT',
+                ], 422);
+            }
+
+
+
             if($client->checkWallet('USDT')<$request->trade_amount){
                 return response()->json([
                     "status" => false,
@@ -80,6 +98,7 @@ class TradeApiController extends Controller
             $trade->trade_crypto_currency = str_replace('USDT','',$request->trade_crypto_currency);
             $trade->trade_result = round('-'.$request->trade_amount);
             $trade->type = $request->type;
+            $trade->crypto_rate = $request->crypto_rate;
             $trade->date_time_expire = Carbon::now()->addSeconds($trade_type->timeout);
             $trade->save();
 

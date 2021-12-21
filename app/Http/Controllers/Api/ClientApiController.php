@@ -193,8 +193,8 @@ class ClientApiController extends Controller
             if($client->otps->status == 1){
                 return response()->json(['status' => false ,'msg' => 'This email is success'],422);
             }
-            if($client->otps->status == 2){
-                return response()->json(['status' => false ,'msg' => 'This email is success'],422);
+            if($client->otps->status == 3){
+                return response()->json(['status' => false ,'msg' => 'This email is not verify '],422);
             }
             $client->tokens()->delete();
             $client->password = Hash::make($request->password);

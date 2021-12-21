@@ -1,28 +1,27 @@
 @extends('layouts.newApp')
-@section('title','Currencies')
+@section('title','Trade')
 
 @section('header')
 
 
     <div class="d-flex align-items-baseline flex-wrap mr-5">
 
-        <h5 class="text-dark font-weight-bold my-1 mr-5">@lang('Currency')</h5>
+        <h5 class="text-dark font-weight-bold my-1 mr-5">@lang('Trade')</h5>
         <!--begin::Breadcrumb-->
         <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-2 font-size-sm">
             <li class="breadcrumb-item">
-                <a href="{{route('currencies.index')}}" class="text-muted">@lang('Currency')</a>
+                <a href="{{route('trade-type.index')}}" class="text-muted">@lang('Trade')</a>
             </li>
 
         </ul>
         <!--end::Breadcrumb-->
     </div>
     <div class="d-flex align-items-center">
-        <!--begin::Actions-->
+        {{--        <!--begin::Actions-->--}}
 
-{{--        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">--}}
-{{--            New Rate--}}
-{{--        </button>--}}
-        <!--end::Actions-->
+        {{--        <button class="btn btn-light-primary font-weight-bolder btn-sm" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-plus"></i>@lang('New Type')</button>--}}
+
+        {{--        <!--end::Actions-->--}}
 
     </div>
 

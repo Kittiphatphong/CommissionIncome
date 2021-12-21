@@ -37,11 +37,21 @@ class TradeTypeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-           'timeout' => 'required'
+           'timeout' => 'required',
+            'min'=>'required',
+            'max' => 'required',
+             'percent' => 'required'
         ]);
-
+        $min = round(str_replace('.','',$request->min));
+        $max = round(str_replace('.','',$request->max));
+        if ($min>=$max){
+            return back()->with('warning','min do not more than max');
+        }
         $trade_type = new TradeType();
         $trade_type->timeout = $request->timeout;
+        $trade_type->min = $min;
+        $trade_type->max = $max;
+        $trade_type->percent = $request->percent;
         $trade_type->save();
 
         return back()->with('success','success');
@@ -64,9 +74,11 @@ class TradeTypeController extends Controller
      * @param  \App\Models\TradeType  $tradeType
      * @return \Illuminate\Http\Response
      */
-    public function edit(TradeType $tradeType)
+    public function edit($id)
     {
-        //
+        return view('tradeTypes.editTradeType')
+            ->with('list_trade_types','list_trade_types')
+            ->with('edit',TradeType::find($id));
     }
 
     /**
@@ -76,9 +88,24 @@ class TradeTypeController extends Controller
      * @param  \App\Models\TradeType  $tradeType
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, TradeType $tradeType)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'min'=>'required',
+            'max' => 'required'
+        ]);
+
+        $min = round(str_replace('.','',$request->min));
+        $max = round(str_replace('.','',$request->max));
+        if ($min>=$max){
+            return back()->with('warning','min do not more than max');
+        }
+        $trade_type = TradeType::find($id);
+        $trade_type->min = $min;
+        $trade_type->max = $max;
+        $trade_type->save();
+
+        return redirect()->route('trade-type.index')->with('success','success');
     }
 
     /**
