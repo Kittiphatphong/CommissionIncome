@@ -82,7 +82,7 @@
                                 </td>
                                 <td>
                                     <span class="
-                                   @if($item->type=="buy")
+                                   @if(\Illuminate\Support\Str::lower($item->type)=="buy")
                                         badge badge-success
 @else
                                         badge badge-danger
