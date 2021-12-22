@@ -92,7 +92,8 @@ class TradeTypeController extends Controller
     {
         $request->validate([
             'min'=>'required',
-            'max' => 'required'
+            'max' => 'required',
+            'percent' => 'required'
         ]);
 
         $min = round(str_replace('.','',$request->min));
@@ -103,6 +104,7 @@ class TradeTypeController extends Controller
         $trade_type = TradeType::find($id);
         $trade_type->min = $min;
         $trade_type->max = $max;
+        $trade_type->percent = $request->percent;
         $trade_type->save();
 
         return redirect()->route('trade-type.index')->with('success','success');
@@ -114,8 +116,9 @@ class TradeTypeController extends Controller
      * @param  \App\Models\TradeType  $tradeType
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TradeType $tradeType)
+    public function destroy($id)
     {
-        //
+        TradeType::find($id)->delete();
+        return back()->with('success','success');
     }
 }

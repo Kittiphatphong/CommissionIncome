@@ -58,6 +58,10 @@
                             <label>@lang('Max')</label>
                             <input type="text" name="max" class="form-control" id="money" value="{{$edit->max}}">
                         </div>
+                        <div class="form-group">
+                            <label>@lang('Percent')</label>
+                            <input type="number" name="percent" class="form-control"  value="{{$edit->percent}}">
+                        </div>
 
                     </div>
                     <div class="modal-footer">

@@ -74,8 +74,21 @@
                                 <td>
                                     {{number_format($item->max)}}
                                 </td>
+
                                 <td>
-                                    <a href="{{route('trade-type.edit',$item->id)}}"  ><i class="fas fa-edit text-warning"></i></a>
+                                    <div class="d-flex justify-content-start m-0">
+
+                                        <a href="{{route('trade-type.edit',$item->id)}}" class="btn btn-link" ><i class="far fa-edit text-warning"></i></a>
+
+                                        <form action="{{route('trade-type.destroy',$item->id)}}" method="post" class="delete{{$item->id}}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class=" btn btn-link  delete_button" data-id="{{$item->id}}"><i class="fas fa-trash text-danger"></i></button>
+                                        </form>
+
+                                    </div>
+
+                                </td>
                                 </td>
 
                                 <td>{{$item->created_at}}</td>
