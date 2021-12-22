@@ -52,4 +52,6 @@ Route::group(['middleware'=>'auth:sanctum'],function() {
    Route::post('trade-type',[TradeApiController::class,'typeTrade']);
    Route::post('trade',[TradeApiController::class,'trade']);
     Route::post('trade-list',[TradeApiController::class,'tradeList']);
+    Route::post('usdt-trade',[TradeApiController::class,'usdtTrade']);
+    Route::post('line-id',[TradeApiController::class,'lineId']);
 });

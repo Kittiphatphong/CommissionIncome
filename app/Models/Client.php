@@ -182,5 +182,53 @@ class Client extends Model
         return  round($wallet,10,PHP_ROUND_HALF_DOWN);
     }
 
+    public function usdt(){
+        $deposit = DB::table('deposits')
+            ->select(DB::raw('SUM(crypto_amount) as crypto_amount'))
+            ->where('client_id',$this->id)->where('crypto_currency','USDT')
+            ->groupBy('crypto_currency')->get();
+
+        $withdrawals = DB::table('withdrawals')
+            ->select(DB::raw('SUM(crypto_amount) as crypto_amount'))
+            ->where('client_id',$this->id)
+            ->where('crypto_currency','USDT')
+            ->WhereNull('status')
+            ->groupBy('crypto_currency')->get();
+
+        $withdrawals1 = DB::table('withdrawals')
+            ->select(DB::raw('SUM(crypto_amount) as crypto_amount'))
+            ->where('client_id',$this->id)
+            ->where('crypto_currency','USDT')
+            ->Where('status',1)
+            ->groupBy('crypto_currency')->get();
+
+
+        $trade= DB::table('trades')
+            ->select(DB::raw('SUM(trade_result) as crypto_amount'))
+            ->where('client_id',$this->id)
+            ->where('crypto_currency','USDT')
+            ->groupBy('crypto_currency')->get();
+
+        $trade_amount = 0;
+        if ($trade->count()>0){
+            $trade_amount = $trade->first()->crypto_amount;
+        }
+
+        if ($deposit->count()>0 && $withdrawals->count()>0 && $withdrawals1->count()>0 ){
+            $wallet = ($deposit->first()->crypto_amount+$trade_amount) -$withdrawals->first()->crypto_amount -$withdrawals1->first()->crypto_amount;
+        }elseif ($deposit->count()>0 && $withdrawals->count()>0 && $withdrawals1->count()<=0 ){
+            $wallet = ($deposit->first()->crypto_amount+$trade_amount)  -$withdrawals->first()->crypto_amount ;
+        }elseif ($deposit->count()>0 && $withdrawals->count()<=0 && $withdrawals1->count()>0 ){
+            $wallet = ($deposit->first()->crypto_amount+$trade_amount)  -$withdrawals1->first()->crypto_amount ;
+        }
+        elseif (($deposit->count()>0 && $withdrawals->count()<=0)){
+            $wallet = ($deposit->first()->crypto_amount+$trade_amount) ;
+        }else{
+            $wallet = 0 ;
+        }
+
+        return (string) round($wallet,10,PHP_ROUND_HALF_DOWN);
+    }
+
 
 }

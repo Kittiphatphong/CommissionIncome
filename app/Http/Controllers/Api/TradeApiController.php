@@ -110,4 +110,36 @@ class TradeApiController extends Controller
             ],422);
         }
     }
+
+    public function usdtTrade(Request $request){
+        try {
+            $clientId = $request->user()->currentAccessToken()->tokenable->id;
+            $client = Client::find($clientId);
+            $data = $client->usdt();
+            return response()->json([
+                "status" => true,
+                "usdt" => $data
+            ]);
+        }catch (\Exception $e){
+            return response()->json([
+                'status' => false,
+                'msg' => $e->getMessage()
+            ],422);
+        }
+    }
+
+    public function lineId(){
+        try {
+
+            return response()->json([
+                "status" => true,
+                "data" => 'test-1111111'
+            ]);
+        }catch (\Exception $e){
+            return response()->json([
+                'status' => false,
+                'msg' => $e->getMessage()
+            ],422);
+        }
+    }
 }
