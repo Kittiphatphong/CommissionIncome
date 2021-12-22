@@ -118,7 +118,12 @@ class TradeTypeController extends Controller
      */
     public function destroy($id)
     {
-        TradeType::find($id)->delete();
+
+        $trade_type = TradeType::find($id);
+        if ($trade_type->trades->count()>0){
+            return back()->with('warning','can not delete');
+        }
+        $trade_type->delete();
         return back()->with('success','success');
     }
 }

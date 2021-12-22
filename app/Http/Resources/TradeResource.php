@@ -20,12 +20,17 @@ class TradeResource extends JsonResource
         }else{
             $status = 0;
         }
+        if($this->trade_result>0){
+            $k = '+';
+        }else{
+            $k = '';
+        }
         return [
             'trade_type' => $this->trade_types->timeout,
             'trade_amount' => (string)$this->trade_amount,
             'crypto_currency' => $this->crypto_currency,
             'trade_crypto_currency' => $this->trade_crypto_currency,
-            'trade_result' => (string) $this->trade_result,
+            'trade_result' => $k . $this->trade_result ,
             'type' => $this->type,
             'crypto_rate' => (string) $this->crypto_rate,
             'time_start_trade' => Carbon::parse($this->created_at)->toDateTimeString(),

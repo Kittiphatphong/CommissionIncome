@@ -14,7 +14,7 @@ class AddKeyToTableTrades extends Migration
     public function up()
     {
         Schema::table('trades', function (Blueprint $table) {
-            $table->foreign('trade_type_id')->references('id')->on('trades')->onDelete('cascade');
+//            $table->foreign('trade_type_id')->references('id')->on('trades')->onDelete('cascade');
         });
     }
 

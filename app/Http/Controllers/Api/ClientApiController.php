@@ -21,7 +21,7 @@ class ClientApiController extends Controller
     protected $limitRequest = 5;
     protected $limitInput = 5;
     protected $dayLimit =1;
-    protected $miniteLimit = 1;
+    protected $miniteLimit = 3;
 
     public function registerEmail(Request $request){
 

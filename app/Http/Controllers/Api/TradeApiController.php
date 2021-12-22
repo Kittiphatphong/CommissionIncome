@@ -58,7 +58,6 @@ class TradeApiController extends Controller
                 'trade_type_id' => 'required|exists:trade_types,id',
                 'trade_amount' => 'required|numeric',
                 'trade_crypto_currency' => 'required',
-
                 'type' => 'required',
                  'crypto_rate' => 'required',
             ]);
@@ -83,8 +82,6 @@ class TradeApiController extends Controller
                 ], 422);
             }
 
-
-
             if($client->checkWallet('USDT')<$request->trade_amount){
                 return response()->json([
                     "status" => false,
@@ -94,7 +91,7 @@ class TradeApiController extends Controller
             $trade_type = TradeType::find($request->trade_type_id);
             $trade = new Trade();
             $trade->client_id = $clientId;
-            $trade->trade_type_id = $request->trade_type_id;
+            $trade->trade_type_id = $trade_type->id;
             $trade->trade_amount = $request->trade_amount;
             $trade->crypto_currency = 'USDT';
             $trade->trade_crypto_currency = str_replace('USDT','',$request->trade_crypto_currency);
