@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Client;
 use App\Models\Currency;
+use App\Models\LineId;
 use App\Models\Order;
 use App\Models\Trade;
 use App\Models\TradeType;
@@ -12,9 +13,10 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\TradeResource;
-
+use App\Http\Controllers\Trail\LineNotify;
 class TradeApiController extends Controller
 {
+    use LineNotify;
     public function typeTrade(Request $request){
         try {
 
@@ -129,17 +131,14 @@ class TradeApiController extends Controller
     }
 
     public function lineId(){
-        try {
-
+        $line_id = null;
+        if (LineId::all()->count()>0){
+            $line_id = LineId::all()->last()->name ;
+        }
             return response()->json([
                 "status" => true,
-                "data" => 'test-1111111'
+                "data" => $line_id
             ]);
-        }catch (\Exception $e){
-            return response()->json([
-                'status' => false,
-                'msg' => $e->getMessage()
-            ],422);
-        }
+
     }
 }

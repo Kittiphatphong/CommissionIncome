@@ -179,7 +179,7 @@ class OrderApiController extends Controller
 
             return response()->json([
                 "status" => true,
-                "data" => Client::find($clientId)->wallet()
+                "data" => Client::find($clientId)->walletString()
             ]);
         }catch (\Exception $e){
             return response()->json([

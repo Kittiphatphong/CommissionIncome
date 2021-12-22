@@ -1,16 +1,16 @@
 @extends('layouts.newApp')
-@section('title','Trade')
+@section('title','Line Id')
 
 @section('header')
 
 
     <div class="d-flex align-items-baseline flex-wrap mr-5">
 
-        <h5 class="text-dark font-weight-bold my-1 mr-5">@lang('Trade')</h5>
+        <h5 class="text-dark font-weight-bold my-1 mr-5">@lang('Line Id')</h5>
         <!--begin::Breadcrumb-->
         <ul class="breadcrumb breadcrumb-transparent breadcrumb-dot font-weight-bold p-0 my-2 font-size-sm">
             <li class="breadcrumb-item">
-                <a href="{{route('trade-type.index')}}" class="text-muted">@lang('Trade')</a>
+                <a href="{{route('line-id.index')}}" class="text-muted">@lang('Line Id')</a>
             </li>
 
         </ul>
@@ -35,22 +35,22 @@
 
             <div class="p-6 bg-white border-b border-gray-200">
                 <div class="bg-white p-4 mb-4 shadow-sm d-flex justify-content-between">
-                    <h3 class=" font-weight-bolder  "><i class="fas fa-chart-bar mr-2"></i>@lang('Edit Trade') </h3>
+                    <h3 class=" font-weight-bolder  "><i class="fab fa-line mr-2"></i>@lang('Change Line Id') <b>[ {{$line}} ]</b></h3>
 
                 </div>
 
-                <form action="{{route('trade.update',$edit->id)}}" method="post" enctype="multipart/form-data">
+                <form action="{{route('line-id.store')}}" method="post" enctype="multipart/form-data">
                     @csrf
-                    @method('PATCH')
+
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>@lang('Trade Result')</label>
-                            <input type="number" name="trade_result" class="form-control" value="{{$edit->trade_result}}">
+                            <label>@lang('Line Id')</label>
+                            <input type="text" name="line_id" class="form-control" >
                         </div>
 
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary btn btn-block">@lang('Update')</button>
+                        <button type="submit" class="btn btn-primary btn btn-block">@lang('Change')</button>
 
                     </div>
                 </form>

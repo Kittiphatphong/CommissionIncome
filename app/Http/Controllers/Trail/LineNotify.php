@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 
 trait LineNotify
 {
+
+
     public function client_order ($message){
         $sToken = "gA09FaSjFYMTwJVlHmtzTbTHpbtOZIEY4iiXcRMnc98";
         $this->sendLineMsg($sToken,$message);

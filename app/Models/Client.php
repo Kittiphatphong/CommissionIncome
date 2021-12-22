@@ -131,7 +131,59 @@ class Client extends Model
         return $wallet;
     }
 
+    public function walletString(){
+        $deposit = DB::table('deposits')
+            ->select('crypto_currency',DB::raw('SUM(crypto_amount) as crypto_amount'))
+            ->where('client_id',$this->id)
+            ->groupBy('crypto_currency')->get();
+        $wallet = [];
+        foreach ($deposit as $item){
+            $withdrawals = DB::table('withdrawals')
+                ->select(DB::raw('SUM(crypto_amount) as crypto_amount'))
+                ->where('client_id',$this->id)
+                ->where('crypto_currency',$item->crypto_currency)
+                ->WhereNull('status')
+                ->groupBy('crypto_currency')->get();
 
+            $withdrawals1 = DB::table('withdrawals')
+                ->select(DB::raw('SUM(crypto_amount) as crypto_amount'))
+                ->where('client_id',$this->id)
+                ->where('crypto_currency',$item->crypto_currency)
+                ->Where('status',1)
+                ->groupBy('crypto_currency')->get();
+
+            $trade = DB::table('trades')
+                ->select(DB::raw('SUM(trade_result) as crypto_amount'))
+                ->where('client_id',$this->id)
+                ->where('crypto_currency',$item->crypto_currency)
+                ->groupBy('crypto_currency')->get();
+
+            $trade_amount = 0;
+            if ($trade->count()>0){
+                $trade_amount = $trade->first()->crypto_amount;
+            }
+
+            if ($withdrawals->count()>0 && $withdrawals1->count()>0){
+                $amount = ($trade_amount+$item->crypto_amount) - $withdrawals->first()->crypto_amount - $withdrawals1->first()->crypto_amount;
+
+            }elseif($withdrawals->count()>0 && $withdrawals1->count()<=0){
+                $amount = ($trade_amount+$item->crypto_amount)  - $withdrawals->first()->crypto_amount ;
+
+            }elseif($withdrawals->count()<=0 && $withdrawals1->count()>0){
+                $amount = ($trade_amount+$item->crypto_amount)   - $withdrawals1->first()->crypto_amount;
+
+            }elseif($withdrawals->count()<=0 && $withdrawals1->count()<=0) {
+                $amount = ($trade_amount+$item->crypto_amount)  ;
+
+            }else{
+                $amount = 0 ;
+            }
+            array_push($wallet,["crypto" => $item->crypto_currency,"amount" => (string) round($amount,10,PHP_ROUND_HALF_DOWN)]);
+
+        }
+
+        return $wallet;
+    }
 
 
     public function checkWallet($crypto_currency){

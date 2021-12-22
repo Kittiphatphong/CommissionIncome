@@ -10,6 +10,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\WithdrawalController;
 use App\Http\Controllers\TradeTypeController;
 use App\Http\Controllers\TradeController;
+use App\Http\Controllers\LineIdController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -44,6 +45,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::resource('trade-type',TradeTypeController::class);
 
     Route::resource('trade',TradeController::class);
+
+    Route::resource('line-id',LineIdController::class);
 });
 
 

@@ -287,7 +287,12 @@
                             </div>
                         </li>
 
-
+                        <li class="menu-item  @isset($line) menu-item-here @endisset" aria-haspopup="true">
+                            <a href="{{route('line-id.index')}}" class="menu-link">
+                                <i class="menu-icon fab fa-line"></i>
+                                <span class="menu-text">@lang('Line Id')</span>
+                            </a>
+                        </li>
 
 {{--                        <li class="menu-section">--}}
 {{--                            <h4 class="menu-text">SETTING</h4>--}}
